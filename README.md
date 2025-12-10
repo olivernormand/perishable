@@ -15,27 +15,28 @@ Based on these parameters, `shopping-simulator` is able to determine the best av
 The basic usage of the package is as follows:
 
 ```python
-from shopping_simulator.simulator import LossSimulation
+from shopping_simulator.optimizer import AnalyticalInventory
 
-sim = LossSimulation(
+solver = AnalyticalInventory(
     codelife=3, 
     unit_sales_per_day=5, 
     units_per_case=4, 
     lead_time=3
 )
 
-min_loss, min_loss_std = sim.calculate_min_loss_and_variance(total_days=20000)
+result = solver.find_optimal_threshold()
 
-print(min_loss, min_loss_std)
->>> 0.1037, 0.0067
+print(f"Optimal threshold: {result.optimal_threshold:.4f}")
+print(f"Total loss: {result.optimal_loss.total_loss:.4f}")
+print(f"Availability loss: {result.optimal_loss.availability_loss:.4f}")
+print(f"Waste loss: {result.optimal_loss.waste_loss:.4f}")
 ```
 
-This calculates the minimum loss (the sum of waste and unavailability) of the product in the store, along with its standard deviation. The simulation runs for 20,000 days to ensure statistical stability.
+This calculates the minimum loss (the sum of waste and unavailability) of the product in the store using an analytical Markov chain approach, which gives exact results without Monte Carlo sampling.
 
-For more detailed results, you can use the `calculate_min_loss()` method which returns additional metrics like waste loss, availability loss, and average stock levels:
+For evaluating a specific threshold:
 
 ```python
-results = sim.calculate_min_loss(total_days=2000)
-print(results.min_loss, results.min_availability_loss, results.min_waste_loss)
->>> 0.1091, 0.0800, 0.0291
+loss = solver.evaluate_threshold(0.1)
+print(f"Loss at threshold 0.1: {loss.total_loss:.4f}")
 ```
