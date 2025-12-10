@@ -1,5 +1,5 @@
-from pydantic import Field, BaseModel
 import numpy as np
+from pydantic import BaseModel, Field
 
 
 class SimulationResult(BaseModel):

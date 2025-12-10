@@ -6,9 +6,11 @@ The initial work was done as part of an assessment, this led to scrappy code.
 The code was completely rewritten to be more general and optimised. Subsequent additions were since made.
 """
 
+import functools
+
 import numpy as np
 from scipy.stats import poisson as ps
-import functools
+
 from shopping_simulator.models import MinimumLossResult, SimulationResult
 
 
