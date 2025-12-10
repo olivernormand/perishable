@@ -2,8 +2,8 @@
 
 from collections import deque
 
-from shopping_simulator.state import InventoryState, initial_state
-from shopping_simulator.transitions import TransitionModel
+from perishable.state import InventoryState, initial_state
+from perishable.transitions import TransitionModel
 
 
 def enumerate_reachable_states(

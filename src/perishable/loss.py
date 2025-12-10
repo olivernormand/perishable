@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from shopping_simulator.markov import MarkovChain
+from perishable.markov import MarkovChain
 
 
 @dataclass

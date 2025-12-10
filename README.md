@@ -1,24 +1,26 @@
-# Freshflow
+# perishable
 
-Analytical optimisation for perishable inventory ordering policies.
+Markov chain model for perishable inventory optimisation.
 
-Freshflow computes optimal ordering thresholds for perishable products using Markov chain steady-state analysis. Given product characteristics (shelf life, demand rate, case size, lead time), it finds the policy that minimises combined waste and stockout losses.
+Given product characteristics (shelf life, demand rate, case size, lead time), this package computes optimal ordering thresholds by solving for the steady-state distribution of the inventory system. It finds the policy that minimises combined waste and stockout losses without Monte Carlo simulation.
 
 ## Installation
 
 ```bash
-pip install freshflow
+pip install perishable
 ```
 
 Or with uv:
 ```bash
-uv add freshflow
+uv add perishable
 ```
 
-## Quick Start
+## Basic Usage
+
+The basic usage of the package is as follows:
 
 ```python
-from shopping_simulator import AnalyticalInventory
+from perishable import AnalyticalInventory
 
 solver = AnalyticalInventory(
     codelife=5,           # Days product is sellable on shelf
@@ -35,62 +37,12 @@ print(f"Availability loss: {result.optimal_loss.availability_loss:.4f}")
 print(f"Waste loss: {result.optimal_loss.waste_loss:.4f}")
 ```
 
-Output:
-```
-Optimal threshold: 0.0100
-Total loss: 0.0875
-Availability loss: 0.0875
-Waste loss: 0.0000
-```
+This calculates the minimum loss (the sum of waste and unavailability) of the product in the store using an analytical Markov chain approach, which gives exact results without Monte Carlo sampling.
 
-## Command Line Interface
-
-```bash
-python -m shopping_simulator.cli --codelife 5 --sales 8 --case-size 6 --lead-time 2
-
-Optimal threshold: 0.0100
-  Total loss:        0.0875
-  Availability loss: 0.0875
-  Waste loss:        0.0000
-  Mean cases/day:    1.29
-  Mean shelf units:  14.2
-```
-
-Use `-v` for verbose output showing the optimisation progress.
-
-## How It Works
-
-### The Ordering Policy
-
-Each day, the system checks the probability of running out of stock before the next order could arrive. If this probability exceeds the **threshold**, it orders more cases.
-
-- **Low threshold** (e.g., 0.01): Order aggressively, minimise stockouts, risk more waste
-- **High threshold** (e.g., 0.5): Order conservatively, accept stockouts, minimise waste
-
-### Loss Calculation
-
-```
-total_loss = availability_loss + waste_loss
-```
-
-Where:
-- `availability_loss` = fraction of days with stockouts (demand > supply)
-- `waste_loss` = wasted units / ordered units
-
-### Markov Chain Approach
-
-The inventory system is modelled as a Markov chain where each state represents:
-- Units on shelf at each freshness level (days until expiry)
-- Units in transit (days until arrival)
-
-The steady-state distribution gives exact long-run probabilities, from which we compute expected losses without simulation.
-
-## Examples
-
-### Comparing Thresholds
+For evaluating a specific threshold:
 
 ```python
-from shopping_simulator import AnalyticalInventory
+from perishable import AnalyticalInventory
 
 solver = AnalyticalInventory(
     codelife=3,
@@ -120,10 +72,10 @@ Threshold | Total Loss | Availability | Waste
 ### Inspecting the State Space
 
 ```python
-from shopping_simulator import AnalyticalInventory
-from shopping_simulator.enumeration import enumerate_reachable_states
-from shopping_simulator.markov import MarkovChain
-from shopping_simulator.loss import compute_loss
+from perishable import AnalyticalInventory
+from perishable.enumeration import enumerate_reachable_states
+from perishable.markov import MarkovChain
+from perishable.loss import compute_loss
 import numpy as np
 
 solver = AnalyticalInventory(
@@ -173,7 +125,7 @@ Probability | On-Shelf  | In-Transit
 ### Analysing Lead Time Impact
 
 ```python
-from shopping_simulator import AnalyticalInventory
+from perishable import AnalyticalInventory
 
 print("Lead Time | Optimal Threshold | Total Loss | Availability | Waste")
 print("-" * 70)
@@ -206,7 +158,7 @@ Lead Time | Optimal Threshold | Total Loss | Availability | Waste
 Inspect what happens from a specific inventory state:
 
 ```python
-from shopping_simulator import TransitionModel, InventoryState
+from perishable import TransitionModel, InventoryState
 
 model = TransitionModel(
     codelife=3,
@@ -306,7 +258,7 @@ transitions = model.get_transitions(state, threshold)
 ## Architecture
 
 ```
-shopping_simulator/
+perishable/
     __init__.py       # Package exports
     cli.py            # Command-line interface
     state.py          # InventoryState dataclass

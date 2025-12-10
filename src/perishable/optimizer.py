@@ -4,10 +4,10 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from shopping_simulator.enumeration import enumerate_reachable_states
-from shopping_simulator.loss import SteadyStateLoss, compute_loss
-from shopping_simulator.markov import MarkovChain
-from shopping_simulator.transitions import TransitionModel
+from perishable.enumeration import enumerate_reachable_states
+from perishable.loss import SteadyStateLoss, compute_loss
+from perishable.markov import MarkovChain
+from perishable.transitions import TransitionModel
 
 
 @dataclass
