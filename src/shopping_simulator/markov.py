@@ -102,7 +102,7 @@ class MarkovChain:
             raise ValueError(f"Unknown method: {method}")
 
     def _solve_power_iteration(self, tol: float, max_iter: int) -> np.ndarray:
-        """Solve using power iteration."""
+        """Solve using power iteration with fallback for periodic chains."""
         # Start with uniform distribution
         pi = np.ones(self.n_states) / self.n_states
 
@@ -121,10 +121,13 @@ class MarkovChain:
 
             pi = pi_new
 
-        print(
-            f"Warning: power iteration did not converge in {max_iter} iterations "
-            f"(diff={diff:.2e})"
-        )
+        # Power iteration didn't converge - likely a periodic chain
+        # Fall back to eigenvector method which handles periodicity correctly
+        if diff > 1e-6:
+            # Oscillation indicates periodicity or slow convergence, use eigenvector method
+            return self._solve_eigenvector()
+
+        # Essentially converged but didn't meet strict tolerance - return current estimate
         return pi
 
     def _solve_eigenvector(self) -> np.ndarray:
