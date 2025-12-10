@@ -131,19 +131,26 @@ class MarkovChain:
         return pi
 
     def _solve_eigenvector(self) -> np.ndarray:
-        """Solve using scipy sparse eigenvector computation."""
-        from scipy.sparse.linalg import eigs
+        """Solve for the time-averaged stationary distribution.
 
-        # Find left eigenvector with eigenvalue 1
-        # eigs finds right eigenvectors, so we transpose
-        eigenvalues, eigenvectors = eigs(self.P.T, k=1, which="LM")
+        For periodic chains, we use Cesàro averaging: compute the average
+        distribution over many steps, which converges to the unique time-averaged
+        stationary distribution regardless of periodicity.
+        """
+        # Use Cesàro averaging: average pi over many iterations
+        # This converges for both periodic and aperiodic chains
+        pi = np.ones(self.n_states) / self.n_states
+        pi_sum = pi.copy()
 
-        # Extract the eigenvector corresponding to eigenvalue ≈ 1
-        pi = np.real(eigenvectors[:, 0])
-        pi = np.abs(pi)
-        pi /= pi.sum()
+        n_iterations = 1000
+        for i in range(1, n_iterations):
+            pi = pi @ self.P
+            pi_sum += pi
 
-        return pi
+        pi_avg = pi_sum / n_iterations
+        pi_avg /= pi_avg.sum()
+
+        return pi_avg
 
     def get_diagnostics(self) -> dict:
         """Return diagnostic information about the chain."""
