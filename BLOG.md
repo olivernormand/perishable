@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The shopping-simulator package determines optimal ordering policies for perishable products in retail. Given four parameters - shelf life (codelife), daily sales rate, case size, and order lead time - it finds the ordering threshold that minimises total loss from waste and stockouts.
+The perishable package determines optimal ordering policies for perishable products in retail. Given four parameters - shelf life (codelife), daily sales rate, case size, and order lead time - it finds the ordering threshold that minimises total loss from waste and stockouts.
 
 The original implementation used Monte Carlo simulation: run thousands of simulated days, try different ordering thresholds, and find which performs best. This worked, but had limitations around runtime, statistical noise, and convergence.
 
@@ -186,7 +186,7 @@ Monte Carlo results vary between runs. Analytical results are exact (to numerica
 ### Example Output
 
 ```
-$ python -m shopping_simulator.cli --codelife 5 --sales 8 --case-size 6 --lead-time 2
+$ python -m perishable.cli --codelife 5 --sales 8 --case-size 6 --lead-time 2
 
 Optimal threshold: 0.0100
   Total loss:        0.0875
@@ -203,7 +203,7 @@ Completed in 7.11 seconds
 The new implementation consists of:
 
 ```
-shopping_simulator/
+perishable/
     __init__.py          # Package exports
     cli.py               # Command-line interface
     state.py             # InventoryState dataclass
@@ -217,7 +217,7 @@ shopping_simulator/
 ### Usage
 
 ```python
-from shopping_simulator import AnalyticalInventory
+from perishable import AnalyticalInventory
 
 solver = AnalyticalInventory(
     codelife=5,

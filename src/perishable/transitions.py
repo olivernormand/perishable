@@ -5,7 +5,7 @@ from functools import lru_cache
 import numpy as np
 from scipy.stats import poisson
 
-from shopping_simulator.state import InventoryState
+from perishable.state import InventoryState
 
 
 class TransitionModel:

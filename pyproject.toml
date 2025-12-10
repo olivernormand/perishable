@@ -1,12 +1,11 @@
 [project]
-name = "shopping-simulator"
+name = "perishable"
 version = "0.1.0"
-description = "Analytical inventory optimisation using Markov chains"
+description = "Markov chain model for perishable inventory optimisation"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "numpy>=2.3.5",
-    "pydantic>=2.12.5",
     "scipy>=1.16.3",
 ]
 

@@ -3,8 +3,8 @@
 import numpy as np
 from scipy.sparse import csr_matrix, lil_matrix
 
-from shopping_simulator.state import InventoryState
-from shopping_simulator.transitions import TransitionModel
+from perishable.state import InventoryState
+from perishable.transitions import TransitionModel
 
 
 class MarkovChain:

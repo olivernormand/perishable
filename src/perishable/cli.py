@@ -3,7 +3,7 @@
 import argparse
 import time
 
-from shopping_simulator.optimizer import AnalyticalInventory
+from perishable.optimizer import AnalyticalInventory
 
 
 def main():
