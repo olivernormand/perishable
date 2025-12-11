@@ -7,12 +7,9 @@ Given product characteristics (shelf life, demand rate, case size, lead time), t
 ## Installation
 
 ```bash
-pip install perishable
-```
-
-Or with uv:
-```bash
-uv add perishable
+git clone https://github.com/olivernormand/perishable.git
+cd perishable
+uv sync
 ```
 
 ## Basic Usage
